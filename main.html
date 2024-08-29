@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form with Ranking</title>
+    <title>Form with Multiple Rankings</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -14,6 +14,7 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            flex-direction: column;
         }
         .container {
             background-color: #ffffff;
@@ -22,6 +23,7 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             max-width: 400px;
             width: 100%;
+            margin-bottom: 20px;
         }
         h2 {
             text-align: center;
@@ -57,6 +59,7 @@
             cursor: pointer;
             font-size: 16px;
             transition: background-color 0.3s ease;
+            margin-top: 10px;
         }
         button:hover {
             background-color: #45a049;
@@ -75,40 +78,72 @@
 </head>
 <body>
 
+    <!-- Seção de Planejamento -->
     <div class="container">
-        <div class="section" id="section1">
-            <h2>Select Options</h2>
-            <form id="optionsForm">
+        <div class="section" id="section1-planning">
+            <h2>Planejamento: Selecione as Opções</h2>
+            <form id="planningOptionsForm">
                 <ul class="option-list">
-                    <li><label><input type="checkbox" value="Option 1"> Option 1</label></li>
-                    <li><label><input type="checkbox" value="Option 2"> Option 2</label></li>
-                    <li><label><input type="checkbox" value="Option 3"> Option 3</label></li>
-                    <li><label><input type="checkbox" value="Option 4"> Option 4</label></li>
+                    <li><label><input type="checkbox" value="Planejamento 1"> Planejamento 1</label></li>
+                    <li><label><input type="checkbox" value="Planejamento 2"> Planejamento 2</label></li>
+                    <li><label><input type="checkbox" value="Planejamento 3"> Planejamento 3</label></li>
+                    <li><label><input type="checkbox" value="Planejamento 4"> Planejamento 4</label></li>
                     <li>
                         <label>
-                            <input type="checkbox" id="customOptionCheckbox">
-                            <input type="text" id="customOptionInput" placeholder="Add your own option">
+                            <input type="checkbox" id="customPlanningOptionCheckbox">
+                            <input type="text" id="customPlanningOptionInput" placeholder="Adicione sua própria opção">
                         </label>
                     </li>
                 </ul>
-                <button type="button" onclick="moveToRanking()">Continue to Ranking</button>
+                <button type="button" onclick="moveToRanking('planning')">Continuar para Ranqueamento</button>
             </form>
         </div>
 
-        <div class="section" id="section2" style="display: none;">
-            <h2>Rank Your Selected Options</h2>
-            <ul class="rank-list" id="rankList">
+        <div class="section" id="section2-planning" style="display: none;">
+            <h2>Planejamento: Ranqueie suas Opções</h2>
+            <ul class="rank-list" id="planningRankList">
                 <!-- Ranked options will be dynamically added here -->
             </ul>
-            <button type="button" onclick="submitRanking()">Submit Ranking</button>
+            <button type="button" onclick="submitRanking('planning')">Enviar Ranqueamento</button>
+        </div>
+    </div>
+
+    <!-- Seção de Execução -->
+    <div class="container">
+        <div class="section" id="section1-execution">
+            <h2>Execução: Selecione as Opções</h2>
+            <form id="executionOptionsForm">
+                <ul class="option-list">
+                    <li><label><input type="checkbox" value="Execução 1"> Execução 1</label></li>
+                    <li><label><input type="checkbox" value="Execução 2"> Execução 2</label></li>
+                    <li><label><input type="checkbox" value="Execução 3"> Execução 3</label></li>
+                    <li><label><input type="checkbox" value="Execução 4"> Execução 4</label></li>
+                    <li>
+                        <label>
+                            <input type="checkbox" id="customExecutionOptionCheckbox">
+                            <input type="text" id="customExecutionOptionInput" placeholder="Adicione sua própria opção">
+                        </label>
+                    </li>
+                </ul>
+                <button type="button" onclick="moveToRanking('execution')">Continuar para Ranqueamento</button>
+            </form>
+        </div>
+
+        <div class="section" id="section2-execution" style="display: none;">
+            <h2>Execução: Ranqueie suas Opções</h2>
+            <ul class="rank-list" id="executionRankList">
+                <!-- Ranked options will be dynamically added here -->
+            </ul>
+            <button type="button" onclick="submitRanking('execution')">Enviar Ranqueamento</button>
         </div>
     </div>
 
     <script>
-        function moveToRanking() {
-            // Get selected options
+        function moveToRanking(type) {
+            const formId = type === 'planning' ? 'planningOptionsForm' : 'executionOptionsForm';
             const selectedOptions = [];
-            const checkboxes = document.querySelectorAll('#optionsForm input[type="checkbox"]:checked');
+            const checkboxes = document.querySelectorAll(`#${formId} input[type="checkbox"]:checked`);
+            
             checkboxes.forEach(checkbox => {
                 const label = checkbox.nextElementSibling ? checkbox.nextElementSibling.value : checkbox.value;
                 if (label) {
@@ -116,19 +151,15 @@
                 }
             });
 
-            // If no options are selected, alert the user
             if (selectedOptions.length === 0) {
-                alert('Please select at least one option.');
+                alert('Por favor, selecione pelo menos uma opção.');
                 return;
             }
 
-            // Move to the ranking section
-            document.getElementById('section1').style.display = 'none';
-            const section2 = document.getElementById('section2');
-            section2.style.display = 'block';
+            document.getElementById(`section1-${type}`).style.display = 'none';
+            document.getElementById(`section2-${type}`).style.display = 'block';
 
-            // Populate the ranking list
-            const rankList = document.getElementById('rankList');
+            const rankList = document.getElementById(`${type}RankList`);
             rankList.innerHTML = '';
             selectedOptions.forEach(option => {
                 const listItem = document.createElement('li');
@@ -137,26 +168,35 @@
                 rankList.appendChild(listItem);
             });
 
-            // Enable drag-and-drop ranking
             new Sortable(rankList, {
                 animation: 150,
                 ghostClass: 'sortable-ghost'
             });
         }
 
-        function submitRanking() {
+        function submitRanking(type) {
+            const rankListId = type === 'planning' ? 'planningRankList' : 'executionRankList';
             const rankedOptions = [];
-            const listItems = document.querySelectorAll('#rankList li');
+            const listItems = document.querySelectorAll(`#${rankListId} li`);
             listItems.forEach(item => {
                 rankedOptions.push(item.textContent);
             });
 
-            alert('Your ranked options: ' + rankedOptions.join(', '));
+            alert(`Seu ranqueamento para ${type === 'planning' ? 'Planejamento' : 'Execução'}: ${rankedOptions.join(', ')}`);
         }
 
-        // Optional: Disable the text input when the checkbox is unchecked
-        document.getElementById('customOptionCheckbox').addEventListener('change', function() {
-            const customInput = document.getElementById('customOptionInput');
+        document.getElementById('customPlanningOptionCheckbox').addEventListener('change', function() {
+            const customInput = document.getElementById('customPlanningOptionInput');
+            if (this.checked) {
+                customInput.disabled = false;
+            } else {
+                customInput.value = '';
+                customInput.disabled = true;
+            }
+        });
+
+        document.getElementById('customExecutionOptionCheckbox').addEventListener('change', function() {
+            const customInput = document.getElementById('customExecutionOptionInput');
             if (this.checked) {
                 customInput.disabled = false;
             } else {
