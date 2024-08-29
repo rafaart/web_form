@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -90,7 +90,7 @@
                 <li>
                     <label>
                         <input type="checkbox" id="customPlanningOptionCheckbox">
-                        <input type="text" id="customPlanningOptionInput" placeholder="Adicione sua própria opção">
+                        <input type="text" id="customPlanningOptionInput" placeholder="Adicione sua própria opção" disabled>
                     </label>
                 </li>
             </ul>
@@ -101,7 +101,7 @@
     <div class="container" id="planning-ranking" style="display: none;">
         <h2>Planejamento: Ranqueie suas Opções</h2>
         <ul class="rank-list" id="planningRankList">
-            <!-- Ranked options will be dynamically added here -->
+            <!-- Opções ranqueadas serão adicionadas dinamicamente aqui -->
         </ul>
         <button type="button" onclick="moveToNextSection('execution-choice')">Continuar para Execução</button>
     </div>
@@ -118,7 +118,7 @@
                 <li>
                     <label>
                         <input type="checkbox" id="customExecutionOptionCheckbox">
-                        <input type="text" id="customExecutionOptionInput" placeholder="Adicione sua própria opção">
+                        <input type="text" id="customExecutionOptionInput" placeholder="Adicione sua própria opção" disabled>
                     </label>
                 </li>
             </ul>
@@ -129,7 +129,7 @@
     <div class="container" id="execution-ranking" style="display: none;">
         <h2>Execução: Ranqueie suas Opções</h2>
         <ul class="rank-list" id="executionRankList">
-            <!-- Ranked options will be dynamically added here -->
+            <!-- Opções ranqueadas serão adicionadas dinamicamente aqui -->
         </ul>
         <button type="button" onclick="submitRanking()">Enviar Ranqueamento</button>
     </div>
@@ -141,7 +141,23 @@
             const checkboxes = document.querySelectorAll(`#${formId} input[type="checkbox"]:checked`);
             
             checkboxes.forEach(checkbox => {
-                const label = checkbox.nextElementSibling ? checkbox.nextElementSibling.value : checkbox.value;
+                let label = '';
+                if (type === 'planning' && checkbox.id === 'customPlanningOptionCheckbox') {
+                    label = document.getElementById('customPlanningOptionInput').value.trim();
+                    if (!label) {
+                        alert('Por favor, preencha a opção personalizada de Planejamento.');
+                        throw new Error('Opção personalizada vazia');
+                    }
+                } else if (type === 'execution' && checkbox.id === 'customExecutionOptionCheckbox') {
+                    label = document.getElementById('customExecutionOptionInput').value.trim();
+                    if (!label) {
+                        alert('Por favor, preencha a opção personalizada de Execução.');
+                        throw new Error('Opção personalizada vazia');
+                    }
+                } else {
+                    label = checkbox.value;
+                }
+
                 if (label) {
                     selectedOptions.push(label);
                 }
@@ -171,15 +187,54 @@
         }
 
         function moveToNextSection(nextSectionId) {
-            document.getElementById('planning-ranking').style.display = 'none';
+            // Muda a visibilidade da seção atual para a próxima
+            const currentSection = document.querySelector('.container:not([style*="display: none"])');
+            if (currentSection) {
+                currentSection.style.display = 'none';
+            }
             document.getElementById(nextSectionId).style.display = 'block';
         }
 
         function submitRanking() {
             const rankedPlanningOptions = [];
             const rankedExecutionOptions = [];
-            document.querySelectorAll(`#planningRankList li`).forEach(item => {
+            // Coletar ranqueamento de Planejamento
+            const planningListItems = document.querySelectorAll(`#planningRankList li`);
+            planningListItems.forEach(item => {
                 rankedPlanningOptions.push(item.textContent);
             });
-            document.querySelectorAll(`#executionRankList li`).forEach(item => {
-                rankedExecutionOp
+            // Coletar ranqueamento de Execução
+            const executionListItems = document.querySelectorAll(`#executionRankList li`);
+            executionListItems.forEach(item => {
+                rankedExecutionOptions.push(item.textContent);
+            });
+
+            alert(`Ranqueamento final:\n\nPlanejamento: ${rankedPlanningOptions.join(', ')}\nExecução: ${rankedExecutionOptions.join(', ')}`);
+        }
+
+        // Event listeners para habilitar/desabilitar inputs personalizados
+        document.getElementById('customPlanningOptionCheckbox').addEventListener('change', function() {
+            const customInput = document.getElementById('customPlanningOptionInput');
+            if (this.checked) {
+                customInput.disabled = false;
+                customInput.focus();
+            } else {
+                customInput.value = '';
+                customInput.disabled = true;
+            }
+        });
+
+        document.getElementById('customExecutionOptionCheckbox').addEventListener('change', function() {
+            const customInput = document.getElementById('customExecutionOptionInput');
+            if (this.checked) {
+                customInput.disabled = false;
+                customInput.focus();
+            } else {
+                customInput.value = '';
+                customInput.disabled = true;
+            }
+        });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
+</body>
+</html>
