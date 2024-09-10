@@ -92,15 +92,18 @@
         <!-- Seção 2: Escolha de Variáveis do Planejamento -->
         <section id="planejamentoEscolha" class="hidden">
             <h2>Planejamento - Escolha de Variáveis</h2>
-            <select id="planejamentoSelect" multiple></select>
+            <h4>escolha as variáveis que impactam na fase de execução de projetos (adicione caso não haja)</h4>
             <input type="text" id="novaVariavelPlanejamento" placeholder="Adicionar nova variável">
             <button onclick="adicionarVariavel('planejamentoSelect', 'novaVariavelPlanejamento')">Adicionar</button>
+            <h4>use ctrl + click para selecionar opções espaçadas e shift + click para consecutivas</h4>
+            <select id="planejamentoSelect" multiple></select>
             <button onclick="mostrarProximaSecao()">Próximo</button>
         </section>
 
         <!-- Seção 3: Ranqueamento das Variáveis do Planejamento -->
         <section id="planejamentoRankingSecao" class="hidden">
             <h2>Planejamento - Ranqueamento das Variáveis</h2>
+            <h4>click e arraste para movimentar as opções aumenando seu grau de importancia (maior importancia de cima para baixo)</h4>
             <ul id="planejamentoRanking"></ul>
             <button onclick="mostrarProximaSecao()">Próximo</button>
         </section>
@@ -108,15 +111,18 @@
         <!-- Seção 4: Escolha de Variáveis da Execução -->
         <section id="execucaoEscolha" class="hidden">
             <h2>Execução - Escolha de Variáveis</h2>
-            <select id="execucaoSelect" multiple></select>
+            <h4>escolha as variáveis que impactam na fase de execução de projetos (adicione caso não haja)</h4>
             <input type="text" id="novaVariavelExecucao" placeholder="Adicionar nova variável">
             <button onclick="adicionarVariavel('execucaoSelect', 'novaVariavelExecucao')">Adicionar</button>
+            <h4>use ctrl + click para selecionar opções espaçadas e shift + click para consecutivas</h4>
+            <select id="execucaoSelect" multiple></select>
             <button onclick="mostrarProximaSecao()">Próximo</button>
         </section>
 
         <!-- Seção 5: Ranqueamento das Variáveis da Execução -->
         <section id="execucaoRankingSecao" class="hidden">
             <h2>Execução - Ranqueamento das Variáveis</h2>
+            <h4>click e arraste para movimentar as opções aumenando seu grau de importancia (maior importancia de cima para baixo)</h4>
             <ul id="execucaoRanking"></ul>
             <button onclick="mostrarProximaSecao()">Próximo</button>
         </section>
